@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- static css -->
+    <link rel="stylesheet" href="../static/style.css">
+
+    <!-- Link to jQuery  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<!-- <body style="background-image: url('../static/background.jpg')"> -->
+<body>
+    <div class="navbar">
+        <a class="active" href="/"> FootyCentralForum</a>
+        <div class="float-right">
+            {% if session['user_name'] %}
+            <a class="btn btn-primary nav-button" id="postBtn"> Post</a>
+            <form action="/logout" method="post" class="form-inline justify-content-end">
+                <button class="btn btn-primary nav-button" type="submit" style="color: white;">log out</button>
+            </form>
+            <!-- <a class="btn btn-primary nav-button" id="logoutBtn"> Logout</a> -->
+            {% else %}
+            <a class="btn btn-primary nav-button" id="loginBtn"> Login</a>
+            <a class="btn btn-primary nav-button" id="registerBtn"> Register</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="container">
+        <!-- ======== ALERT FOR REGISTER SUCCESS ======== -->
+        <div class="container" style="margin-top: 20px; min-height:100%; width:80%">
+            {% with messages = get_flashed_messages(category_filter=["success"]) %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <h4 class="alert-heading">SUCCESS!</h4>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                {{message}}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% block body %}{% endblock %}
+        </div>
+        
+        <div class="row">
+            {% if session['user_name'] %}
+            <!-- FORM : CREATE A MESSAGE  -->
+            <!-- =============================================== -->
+            <div class="create-topic" style="margin: 30px 0 60px 0;">
+                <div class="col">
+                    <form action="/create" method="post">
+                        <div class="form-group">
+                            <label for="create" style="font-weight: bold; font-size: 1.5rem">Post a topic:</label>
+                            <textarea class="form-control" id="create" name="create" rows="3"></textarea>
+                        </div>
+                        <button class="btn btn-info float-right" type="submit">Post</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div style="overflow-x:auto;">
+            <table>
+                <tr>
+                    <th>No</th>
+                    <th>Topic</th>
+                    <th>Author</th>
+                    <th>Created</th>
+                    <th>Updated</th>
+                </tr>
+                {% for topic in topics %}
+                <tr id="topic{{ topic[0] }}" class="topic-row" data-id="{{ topic[0] }}">
+                    <td>{{ topic[0] }}</td>
+                    <td><a href="{{url_for('topic', id=topic[0], text=topic[1])}}">{{ topic[1] }}</a></td>
+                    <td>{{ topic[4] }}</td>
+                    <td>{{ topic[2] }}</td>
+                    <td>{{ topic[3] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Login</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form action="/login" method="post">
+                        <div class="form-group">
+                            <label class="labels" for="email">Email:</label>
+                            <input name="email" type="text" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="labels" for="password">Password:</label>
+                            <input name="password" type="password" class="form-control">
+                        </div>
+                        <div>
+                            {% with errors = get_flashed_messages(category_filter=["login"]) %}
+                            {% if errors %}
+                            {% for msg in errors %}
+                            <p class="error">{{ msg }}</p>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                        <button type="submit" class="btn" style="background-color: #f51; color: white;">Login!</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Register</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form action="/register" method="post">
+
+                        <!-- user name: letters only, at least 2 characters -->
+                        <div class="form-group">
+                            <label class="labels" for="username">User name:</label>
+                            <div>
+                                {% with errors = get_flashed_messages(category_filter=["username"]) %}
+                                {% if errors %}
+                                {% for msg in errors %}
+                                <p class="error">{{ msg }}</p>
+                                {% endfor %}
+                                {% endif %}
+                                {% endwith %}
+                            </div>
+    
+                            <input name="username" type="text" class="form-control" id="username">
+                        </div>
+    
+    
+                        <!-- email: email format, not already in database -->
+                        <div class="form-group">
+                            <label class="labels" for="email">Email:</label>
+                            <div>
+                                {% with errors = get_flashed_messages(category_filter=["email"]) %}
+                                {% if errors %}
+                                {% for msg in errors %}
+                                <p class="error">{{ msg }}</p>
+                                {% endfor %}
+                                {% endif %}
+                                {% endwith %}
+                            </div>
+    
+                            <input name="email" type="text" class="form-control">
+                        </div>
+    
+    
+                        <!-- password: at least 8 characters -->
+                        <div class="form-group">
+                            <label class="labels" for="password">Password:</label>
+                            <div>
+                                {% with errors = get_flashed_messages(category_filter=["password"]) %}
+                                {% if errors %}
+                                {% for msg in errors %}
+                                <p class="error">{{ msg }}</p>
+                                {% endfor %}
+                                {% endif %}
+                                {% endwith %}
+                            </div>
+    
+                            <input name="password" type="password" class="form-control">
+                        </div>
+    
+                        <!-- confirm password: matches password -->
+                        <div class="form-group">
+                            <label class="labels" for="confirm-password">Confirm password:</label>
+                            <div>
+                                {% with errors = get_flashed_messages(category_filter=["confirm-password"]) %}
+                                {% if errors %}
+                                {% for msg in errors %}
+                                <p class="error">{{ msg }}</p>
+                                {% endfor %}
+                                {% endif %}
+                                {% endwith %}
+                            </div>
+    
+                            <input name="confirm-password" type="password" class="form-control" id="confirm-password">
+                        </div>
+    
+                        <button type="submit" class="btn" style="background-color: #f51; color: white;">Register!</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal
+        var loginModal = document.getElementById("loginModal");
+        var registerModal = document.getElementById("registerModal");
+        
+        // Get the button that opens the modal
+        var loginBtn = document.getElementById("loginBtn");
+        var registerBtn = document.getElementById("registerBtn");
+        // var logoutBtn = document.getElementById("logoutBtn");
+        
+        // When the user clicks the button, open the modal 
+        if (loginBtn) {
+            loginBtn.onclick = function () {
+                loginModal.style.display = "block";
+            }            
+        }
+
+        if (registerBtn) {
+            registerBtn.onclick = function () {
+                registerModal.style.display = "block";
+            }            
+        }
+
+        $('.close').on('click', function () {
+            loginModal.style.display = "none";
+            registerModal.style.display = "none";
+        });
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            switch (event.target) {
+                case loginModal:
+                    loginModal.style.display = "none";
+                    break;
+                case registerModal:
+                    registerModal.style.display = "none";
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    </script>
+
+    <!-- BOOTSTRAP'S: Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Claim</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- static css -->
+    <link rel="stylesheet" href="../static/style.css">
+
+    <!-- Link to jQuery  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="navbar">
+        <a class="active" href="/"> FootyCentralForum</a>
+        <div class="float-right">
+            {% if session['user_name'] %}
+            <a class="btn btn-primary nav-button" id="postBtn"> Post</a>
+            <form action="/logout" method="post" class="form-inline justify-content-end">
+                <button class="btn btn-primary nav-button" type="submit" style="color: white;">log out</button>
+            </form>
+            <!-- <a class="btn btn-primary nav-button" id="logoutBtn"> Logout</a> -->
+            {% else %}
+            <a class="btn btn-primary nav-button" id="loginBtn"> Login</a>
+            <a class="btn btn-primary nav-button" id="registerBtn"> Register</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">    
+        <h3 style="border: 2px solid black; border-radius: 5px; display: inline-block; margin-top: 20px;">{{ text }}</h3>
+        {% if session['user_name'] %}
+            <div class="float-right action-group">
+                <button class="btn btn-primary" id="claimBtn" type="button" style="display: inline-block">Create Claim</button>
+                <button class="btn btn-primary" id="threadBtn" type="button" style="display: inline-block">Create Thread</button>
+            </div>
+        {% endif %}
+        <br/>
+    
+        <div class="container">
+            {% for claim in claims %}
+                <div class="claims claimStyle" data-id="{{claim.id}}">
+                    <p style="float: left; margin-right: 10px; margin-left: 10px"> {{ claim.text }} @{{claim.username}} </p>
+                    <img style="margin-right: 4px;" src="{{url_for('static', filename='claim.png')}}" />
+                </div>
+                <span style="float: right"><span style="color: red;">{{ claim.created_at }}</span> {{ claim.post_type }}</span>
+                <br>
+            {% endfor %}
+
+            {% for thread in threads %}
+                <div class="threads claimStyle" data-id="{{thread.id}}">
+                    <p style="float: left; margin-right: 10px; margin-left: 10px"> {{ thread.text }} @{{thread.username}} </p>
+                    {% if thread.post_type == 1 %}
+                        <img style="margin-right: 4px;" src="{{url_for('static', filename='clarif.png')}}" />
+                    {% elif thread.post_type == 2 %}
+                        <img style="margin-right: 4px;" src="{{url_for('static', filename='Supportive.png')}}" />
+                    {% elif thread.post_type == 3 %}
+                        <img style="margin-right: 4px;" src="{{url_for('static', filename='Counter.png')}}" />
+                    {% endif %}
+                </div>
+                <span style="float: right"><span style="color: red;">{{thread.created_at}}</span> {{thread.post_type}}</span>
+                <br>
+                
+                {% for cl in thread.children %}
+                    <div class="claimStyle" data-id="{{cl.id}}" style="margin-left: 30px">
+                        <p style="float: left; margin-right: 10px; margin-left: 10px"> {{ cl.text }} @{{cl.username}} </p>
+                        <img style="margin-right: 4px;" src="{{url_for('static', filename='claim.png')}}" />
+                    </div>
+                    <span style="float: right; color: red;">{{cl.created_at}}</span>
+                    <br>
+                {% endfor %}
+
+                
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="modal" id="claimModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create new Claim</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/create_claim">
+                    <div class="modal-body">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }}">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <input name="claimId" value="{{ id }}" hidden />
+                        <input name="claimText" value="{{ text }}" hidden />
+                        <input name="pagetype" value="1" hidden />
+
+                        <div class="form-group">
+                            <label class="labels" for="text">Text:</label>
+                            <input name="text" type="text" class="form-control">
+                        </div>
+    
+                        <!-- <div class="form-group">
+                            <label class="labels" for="relation">Relation:</label>
+                            <select name="relation" class="form-control">
+                                {% for claim in claims %}
+                                    <option value="{{ claim.id }}">Claim {{ claim.id }}</option>
+                                {% endfor %}
+                            </select>
+                        </div> -->
+
+                        <div class="form-group">
+                            <label class="labels" for="posttype">Post Type:</label>
+                            <select name="posttype" class="form-control">
+                                <option value="1">Clarification</option>
+                                <option value="2">Support</option>
+                                <option value="3">CounterArgument</option>
+                              </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn" style="background-color: #f51; color: white;">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="threadModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create new Thread</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/create_thread">
+                    <div class="modal-body">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }}">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <input name="claimId" value="{{ id }}" hidden />
+                        <input name="claimText" value="{{ text }}" hidden />
+                        <input name="topicId" value="{{ parent }}" hidden />
+    
+                        <div class="form-group">
+                            <label class="labels" for="text">Text:</label>
+                            <input name="text" type="text" class="form-control">
+                        </div>
+    
+                        <div class="form-group">
+                            <label class="labels" for="relation">Claim Relation:</label>
+                            <select name="claimRelation" class="form-control">
+                                <option value="0">Reply to Claim</option>
+                                <option value="1">Reply to Reply</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="labels" for="relation">Thread Relation:</label>
+                            <select name="threadRelation" class="form-control">
+                                {% for thread in threads %}
+                                    <option value="{{ thread.id }}">Thread {{ thread.id }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="labels" for="posttype">Post Type:</label>
+                            <select name="posttype" class="form-control">
+                                <option value="1">Evidence</option>
+                                <option value="2">Support</option>
+                                <option value="3">Rebuttal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn" style="background-color: #f51; color: white;">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal
+        var claimModal = document.getElementById("claimModal");
+        var threadModal = document.getElementById("threadModal");
+        
+        // Get the button that opens the modal
+        var claimBtn = document.getElementById("claimBtn");
+        var threadBtn = document.getElementById("threadBtn");
+        
+        // When the user clicks the button, open the modal 
+        if (claimBtn) {
+            claimBtn.onclick = function () {
+                claimModal.style.display = "block";
+            }            
+        }
+
+        if (threadBtn) {
+            threadBtn.onclick = function () {
+                threadModal.style.display = "block";
+            }            
+        }
+
+        $('.close').on('click', function () {
+            claimModal.style.display = "none";
+            threadModal.style.display = "none";
+        });
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            switch (event.target) {
+                case claimModal:
+                    claimModal.style.display = "none";
+                    break;
+                case threadModal:
+                    threadModal.style.display = "none";
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    </script>
+
+    <!-- BOOTSTRAP'S: Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

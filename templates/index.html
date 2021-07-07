@@ -22,7 +22,6 @@
         <a class="active" href="/"> FootyCentralForum</a>
         <div class="float-right">
             {% if session['user_name'] %}
-            <a class="btn btn-primary nav-button" id="postBtn"> Post</a>
             <form action="/logout" method="post" class="form-inline justify-content-end">
                 <button class="btn btn-primary nav-button" type="submit" style="color: white;">log out</button>
             </form>

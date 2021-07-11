@@ -4,9 +4,9 @@ import mysql.connector
 # Create a class that will give us an object that we can use to connect to a database
 class MySQLConnection:
     def __init__(self, db):
-        connection = mysql.connector.connect(host = 'freedb.tech',
-                                    user = 'freedbtech_andrei', # change the user and password as needed
-                                    password = '123456', 
+        connection = mysql.connector.connect(host = 'sql11.freemysqlhosting.net',
+                                    user = 'sql11422002', # change the user and password as needed
+                                    password = '9S1wcXgEZc', 
                                     database = db)
                                     # charset = 'utf8mb4',
                                     # cursorclass = pymysql.cursors.DictCursor,

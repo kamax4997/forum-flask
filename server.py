@@ -8,7 +8,7 @@ import mysql.connector
 # import pymysql
 # import pymysql.cursors #makes data sent as python dictionaries
 
-mysql = connectToMySQL('freedbtech_footballforum')
+mysql = connectToMySQL('sql11422002')
 
 # used for email validation
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
@@ -22,7 +22,7 @@ app.secret_key = "ThisIsSecret!"
 # =====================================================
 @app.route('/')
 def index():
-    mysql = connectToMySQL('freedbtech_footballforum')
+    mysql = connectToMySQL('sql11422002')
 
     # data to show "ALL topics", newest first
     # -------------------------------------------
@@ -51,7 +51,7 @@ def register():
 
     # checking if email already exists in db
     # --------------------------------------
-    mysql = connectToMySQL('freedbtech_footballforum')
+    mysql = connectToMySQL('sql11422002')
     query = "SELECT * FROM users WHERE email = %(email)s;"
     data = { "email" : request.form['email']}
     matchingEmail = mysql.query_db(query, data)
@@ -77,7 +77,7 @@ def register():
     # ADD NEW USER TO DATABASE : hash password
     # --------------------------------------
     else:
-        mysql = connectToMySQL('freedbtech_footballforum')
+        mysql = connectToMySQL('sql11422002')
         password_hash = bcrypt.generate_password_hash(request.form['password']) 
 
         query = "INSERT INTO users (username, email, password, created_at, updated_at) VALUES (%(username)s, %(email)s, %(password)s, NOW(), NOW());"
@@ -105,7 +105,7 @@ def login():
     
     # check if email exists in database
     # --------------------------------------
-    mysql = connectToMySQL('freedbtech_footballforum')
+    mysql = connectToMySQL('sql11422002')
     query = "SELECT id, username, password FROM users WHERE email = %(email)s;"
     data = { "email" : request.form['email'] }
     result = mysql.query_db(query, data)
@@ -141,7 +141,7 @@ def topic():
     topic_id = request.args.get('id')
     topic_text = request.args.get('text')
 
-    mysql = connectToMySQL('freedbtech_footballforum')
+    mysql = connectToMySQL('sql11422002')
 
     # data for all claims belong to selected topic
     claim_query = "SELECT claims.id, claims.post_type, claims.topic_id, claims.user_id, claims.parent_claim_id, claims.text, claims.created_at, claims.updated_at, users.username FROM claims JOIN users ON (claims.user_id = users.id AND claims.topic_id = %(topic_id)s) ORDER BY claims.id DESC;"
@@ -171,7 +171,7 @@ def claim():
     claim_id = request.args.get('id')
     claim_text = request.args.get('text')
 
-    mysql = connectToMySQL('freedbtech_footballforum')
+    mysql = connectToMySQL('sql11422002')
 
     # data for all claims belong to selected topic
     claim_query = "SELECT claims.id, claims.post_type, claims.topic_id, claims.user_id, claims.parent_claim_id, claims.text, claims.created_at, claims.updated_at, users.username FROM claims JOIN users ON (claims.user_id = users.id AND claims.parent_claim_id = %(claim_id)s) ORDER BY claims.id DESC;"
@@ -187,7 +187,7 @@ def claim():
             di[claim_keys[key]] = claim[key]
         output.append(di)
     
-    mysql = connectToMySQL('freedbtech_footballforum')
+    mysql = connectToMySQL('sql11422002')
 
     thread_query = "SELECT threads.id, threads.post_type, threads.topic_id, threads.user_id, threads.claim_id, threads.parent_thread_id, threads.text, threads.created_at, threads.updated_at, users.username FROM threads JOIN users ON (threads.user_id = users.id AND threads.claim_id = %(claim_id)s) ORDER BY threads.id DESC;"
     thread_data = {
@@ -201,7 +201,7 @@ def claim():
         for key in range(len(thread)):
             di1[thread_keys[key]] = thread[key]
 
-        mysql = connectToMySQL('freedbtech_footballforum')
+        mysql = connectToMySQL('sql11422002')
 
         thread_query1 = "SELECT threads.id, threads.post_type, threads.topic_id, threads.user_id, threads.claim_id, threads.parent_thread_id, threads.text, threads.created_at, threads.updated_at, users.username FROM threads JOIN users ON (threads.user_id = users.id AND threads.parent_thread_id = %(thread_id)s) ORDER BY threads.id DESC"
         thread_data1 = {
@@ -227,7 +227,7 @@ def claim():
 def create():
     user_id = session['user_id']
 
-    mysql = connectToMySQL("freedbtech_footballforum")
+    mysql = connectToMySQL("sql11422002")
     query= "INSERT INTO topics (user_id, text, created_at, updated_at, views) VALUES (%(user_id)s, %(text)s, NOW(), NOW(), %(views)s);"
 
     temp = request.form.to_dict(flat = False)
@@ -253,7 +253,7 @@ def create():
 @app.route('/create_claim', methods=['POST'])
 def create_claim():
 
-    mysql = connectToMySQL("freedbtech_footballforum")
+    mysql = connectToMySQL("sql11422002")
     query= ""
     data = {}
     if request.form['pagetype'] == '1':
@@ -290,7 +290,7 @@ def create_claim():
 def create_thread():
     user_id = session['user_id']
 
-    mysql = connectToMySQL("freedbtech_footballforum")
+    mysql = connectToMySQL("sql11422002")
     query= ""
     data = {}
     if request.form['claimRelation'] == '0':
@@ -321,7 +321,7 @@ def create_thread():
 # @app.route('/delete_message', methods=['POST'])
 # def delete_message():
 
-#     mysql = connectToMySQL("freedbtech_footballforum")
+#     mysql = connectToMySQL("sql11422002")
 #     query = "DELETE FROM messages WHERE (id = %(messagesId)s);"
 #     data = {
 #         'messagesId': request.form['messagesId']

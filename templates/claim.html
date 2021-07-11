@@ -32,8 +32,10 @@
         </div>
     </div>
 
-    <div class="container">    
-        <h3 style="border: 2px solid black; border-radius: 5px; display: inline-block; margin-top: 20px;">{{ text }}</h3>
+    <div class="container">
+        <h3 style="border: 2px solid black; border-radius: 5px; display: inline-block; margin-top: 20px;">
+            {{ text }}
+        </h3>
         {% if session['user_name'] %}
             <div class="float-right action-group">
                 <button class="btn btn-primary" id="claimBtn" type="button" style="display: inline-block">Create Claim</button>
@@ -48,7 +50,7 @@
                     <p style="float: left; margin-right: 10px; margin-left: 10px"> {{ claim.text }} @{{claim.username}} </p>
                     <img style="margin-right: 4px;" src="{{url_for('static', filename='claim.png')}}" />
                 </div>
-                <span style="float: right"><span style="color: red;">{{ claim.created_at }}</span> {{ claim.post_type }}</span>
+                <span style="float: right"><span style="color: red;">{{ claim.created_at }}</span></span>
                 <br>
             {% endfor %}
 
@@ -63,7 +65,7 @@
                         <img style="margin-right: 4px;" src="{{url_for('static', filename='Counter.png')}}" />
                     {% endif %}
                 </div>
-                <span style="float: right"><span style="color: red;">{{thread.created_at}}</span> {{thread.post_type}}</span>
+                <span style="float: right"><span style="color: red;">{{thread.created_at}}</span></span>
                 <br>
                 
                 {% for cl in thread.children %}
@@ -162,13 +164,13 @@
     
                         <div class="form-group">
                             <label class="labels" for="relation">Claim Relation:</label>
-                            <select name="claimRelation" class="form-control">
+                            <select name="claimRelation" class="form-control" id="claimRelation">
                                 <option value="0">Reply to Claim</option>
                                 <option value="1">Reply to Reply</option>
                             </select>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group thread-group">
                             <label class="labels" for="relation">Thread Relation:</label>
                             <select name="threadRelation" class="form-control">
                                 {% for thread in threads %}
@@ -177,7 +179,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group thread-group">
                             <label class="labels" for="posttype">Post Type:</label>
                             <select name="posttype" class="form-control">
                                 <option value="1">Evidence</option>
@@ -219,6 +221,15 @@
         $('.close').on('click', function () {
             claimModal.style.display = "none";
             threadModal.style.display = "none";
+        });
+
+        $('#claimRelation').on('change', function () {
+            console.log($(this).val());
+            if ($(this).val() == 0) {
+                $('.thread-group').css('display', 'none');
+            } else {
+                $('.thread-group').css('display', 'block');
+            }
         });
         
         // When the user clicks anywhere outside of the modal, close it

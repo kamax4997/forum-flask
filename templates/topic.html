@@ -49,7 +49,7 @@
                     <p style="float: left; margin-right: 10px; margin-left: 10px"> {{ claim.text }} @{{claim.username}} </p>
                     <img style="margin-right: 4px;" src="{{url_for('static', filename='claim.png')}}" />
                 </a>
-                <span style="float: right"><span style="color: red;">{{ claim.created_at }}</span> {{ claim.post_type }}</span>
+                <span style="float: right"><span style="color: red;">{{ claim.created_at }}</span></span>
                 <br>
                 
             {% endfor %}

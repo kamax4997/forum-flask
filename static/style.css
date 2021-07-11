@@ -139,3 +139,7 @@ tr:nth-child(even) {
 .action-group {
   margin-top: 20px
 }
+
+.thread-group {
+  display: none;
+}

@@ -308,7 +308,7 @@ def create_thread():
             'post_type': request.form['posttype'],
             'user_id': session['user_id'],
             'topic_id': request.form['topicId'],
-            'parent_thread_id': request.form['threadRelation'],
+            'parent_thread_id': request.form['threadRelation'] if request.form['threadRelation'] else None,
             'text': request.form['text'],
         }
     mysql.query_db(query, data)

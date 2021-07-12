@@ -48,6 +48,81 @@
             {% endif %}
             {% endwith %}
             {% block body %}{% endblock %}
+
+            <div>
+                {% with errors = get_flashed_messages(category_filter=["username"]) %}
+                {% if errors %}
+                {% for msg in errors %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <h4 class="alert-heading">Error!</h4>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                        {{ msg }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
+
+            <div>
+                {% with errors = get_flashed_messages(category_filter=["email"]) %}
+                {% if errors %}
+                {% for msg in errors %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <h4 class="alert-heading">Error!</h4>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                        {{ msg }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
+
+            <div>
+                {% with errors = get_flashed_messages(category_filter=["password"]) %}
+                {% if errors %}
+                {% for msg in errors %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <h4 class="alert-heading">Error!</h4>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                        {{ msg }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
+
+            <div>
+                {% with errors = get_flashed_messages(category_filter=["confirm-password"]) %}
+                {% if errors %}
+                {% for msg in errors %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <h4 class="alert-heading">Error!</h4>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                        {{ msg }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
+
+            <div>
+                {% with errors = get_flashed_messages(category_filter=["login"]) %}
+                {% if errors %}
+                {% for msg in errors %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <h4 class="alert-heading">Error!</h4>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                        {{ msg }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
         </div>
         
         <div class="row">
@@ -106,15 +181,7 @@
                             <label class="labels" for="password">Password:</label>
                             <input name="password" type="password" class="form-control">
                         </div>
-                        <div>
-                            {% with errors = get_flashed_messages(category_filter=["login"]) %}
-                            {% if errors %}
-                            {% for msg in errors %}
-                            <p class="error">{{ msg }}</p>
-                            {% endfor %}
-                            {% endif %}
-                            {% endwith %}
-                        </div>
+                        
                         <button type="submit" class="btn" style="background-color: #f51; color: white;">Login!</button>
                     </form>
                 </div>
@@ -133,15 +200,7 @@
                         <!-- user name: letters only, at least 2 characters -->
                         <div class="form-group">
                             <label class="labels" for="username">User name:</label>
-                            <div>
-                                {% with errors = get_flashed_messages(category_filter=["username"]) %}
-                                {% if errors %}
-                                {% for msg in errors %}
-                                <p class="error">{{ msg }}</p>
-                                {% endfor %}
-                                {% endif %}
-                                {% endwith %}
-                            </div>
+                            
     
                             <input name="username" type="text" class="form-control" id="username">
                         </div>
@@ -150,15 +209,7 @@
                         <!-- email: email format, not already in database -->
                         <div class="form-group">
                             <label class="labels" for="email">Email:</label>
-                            <div>
-                                {% with errors = get_flashed_messages(category_filter=["email"]) %}
-                                {% if errors %}
-                                {% for msg in errors %}
-                                <p class="error">{{ msg }}</p>
-                                {% endfor %}
-                                {% endif %}
-                                {% endwith %}
-                            </div>
+                            
     
                             <input name="email" type="text" class="form-control">
                         </div>
@@ -167,15 +218,7 @@
                         <!-- password: at least 8 characters -->
                         <div class="form-group">
                             <label class="labels" for="password">Password:</label>
-                            <div>
-                                {% with errors = get_flashed_messages(category_filter=["password"]) %}
-                                {% if errors %}
-                                {% for msg in errors %}
-                                <p class="error">{{ msg }}</p>
-                                {% endfor %}
-                                {% endif %}
-                                {% endwith %}
-                            </div>
+                            
     
                             <input name="password" type="password" class="form-control">
                         </div>
@@ -183,15 +226,7 @@
                         <!-- confirm password: matches password -->
                         <div class="form-group">
                             <label class="labels" for="confirm-password">Confirm password:</label>
-                            <div>
-                                {% with errors = get_flashed_messages(category_filter=["confirm-password"]) %}
-                                {% if errors %}
-                                {% for msg in errors %}
-                                <p class="error">{{ msg }}</p>
-                                {% endfor %}
-                                {% endif %}
-                                {% endwith %}
-                            </div>
+                            
     
                             <input name="confirm-password" type="password" class="form-control" id="confirm-password">
                         </div>

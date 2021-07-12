@@ -296,7 +296,7 @@ def create_thread():
     if request.form['claimRelation'] == '0':
         query = "INSERT INTO threads (post_type, topic_id, user_id, claim_id,  text, created_at, updated_at) VALUES (%(post_type)s, %(topic_id)s, %(user_id)s, %(claim_id)s, %(text)s, NOW(), NOW());"
         data = {
-            'post_type': request.form['posttype'],
+            'post_type': request.form['cposttype'],
             'user_id': session['user_id'],
             'topic_id': request.form['topicId'],
             'claim_id': request.form['claimId'],

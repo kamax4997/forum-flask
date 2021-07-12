@@ -143,3 +143,7 @@ tr:nth-child(even) {
 .thread-group {
   display: none;
 }
+
+.error {
+  color: red;
+}

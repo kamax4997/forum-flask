@@ -122,9 +122,8 @@
                         <div class="form-group">
                             <label class="labels" for="posttype">Post Type:</label>
                             <select name="posttype" class="form-control">
-                                <option value="1">Clarification</option>
-                                <option value="2">Support</option>
-                                <option value="3">CounterArgument</option>
+                                <option value="1">Opposed</option>
+                                <option value="2">Equivalent</option>
                               </select>
                         </div>
                     </div>
@@ -167,6 +166,15 @@
                             <select name="claimRelation" class="form-control" id="claimRelation">
                                 <option value="0">Reply to Claim</option>
                                 <option value="1">Reply to Reply</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group claim-group">
+                            <label class="labels" for="cposttype">Post Type:</label>
+                            <select name="cposttype" class="form-control">
+                                <option value="1">CounterArgument</option>
+                                <option value="2">Supporting Argument</option>
+                                <option value="3">Clarification</option>
                             </select>
                         </div>
 
@@ -227,8 +235,10 @@
             console.log($(this).val());
             if ($(this).val() == 0) {
                 $('.thread-group').css('display', 'none');
+                $('.claim-group').css('display', 'block');
             } else {
                 $('.thread-group').css('display', 'block');
+                $('.claim-group').css('display', 'none');
             }
         });
         

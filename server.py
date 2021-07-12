@@ -63,7 +63,17 @@ def register():
     # --------------------------------------
     if len(request.form['password']) < 8:
         flash("password must be at least 8 characters", 'password')
-    
+
+    # new-password validation
+    # --------------------------------------
+    if re.search('[0-9]', request.form['password']) is None:
+        flash("Make sure your password has a number in it", 'password')
+
+    # new-password validation
+    # --------------------------------------
+    if re.search('[A-Z]', request.form['password']) is None:
+        flash("Make sure your password has a capital letter in it", 'password')
+        
     # confirm-password validation
     # --------------------------------------
     if request.form['password'] != request.form['confirm-password']:

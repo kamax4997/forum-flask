@@ -2,6 +2,14 @@
 
 Simple message forum with comments 
 
+# Installation Guide
+
+```python
+> python3 -m venv venv
+> source venv/bin/activate
+> flask run
+```
+
 ------------------------------------------------------------
 
 # App's Purpose:
